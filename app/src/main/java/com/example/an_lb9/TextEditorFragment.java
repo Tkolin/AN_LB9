@@ -29,7 +29,7 @@ public class TextEditorFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_editor, container, false);
-
+        // Поиск элементов на интерфейсе
         editText = view.findViewById(R.id.editText);
         buttonSave = view.findViewById(R.id.buttonSave);
         buttonCreateNew = view.findViewById(R.id.buttonCreateNew);
@@ -113,19 +113,20 @@ public class TextEditorFragment extends Fragment {
         builder.setTitle("Введите имя нового файла");
         builder.setView(input);
 
+        // Нажатие на кнопку ОК при создании
         builder.setPositiveButton("Создать", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String fileName = input.getText().toString();
                 if (!fileName.isEmpty()) {
                     openedfile = new File(getContext().getFilesDir(), fileName);
-                    Toast.makeText(getContext(), "Файл создан: " + fileName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Файл создан: " + fileName, Toast.LENGTH_SHORT).show(); 
                 } else {
                     Toast.makeText(getContext(), "Введите имя файла", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
+      // Нажатие на кнопку Отмена при создании
         builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -138,19 +139,23 @@ public class TextEditorFragment extends Fragment {
 
     // Метод для отображения списка доступных файлов и выбора файла для открытия
     private void showFileListDialog() {
-        File directory = getContext().getFilesDir();
-        File[] files = directory.listFiles();
+        
+        File directory = getContext().getFilesDir();// Получение расположения ВСЕХ файлов
+        File[] files = directory.listFiles();// Загрузка ВСЕХ файлов из Заданого расположения
 
+        // Проверка есть ли файлы
         if (files == null || files.length == 0) {
             Toast.makeText(getContext(), "Нет доступных файлов", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Получекние названий файлов
         final CharSequence[] fileNames = new CharSequence[files.length];
         for (int i = 0; i < files.length; i++) {
             fileNames[i] = files[i].getName();
         }
 
+        //Диалоговое окно для открытия фалов 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Выберите файл для открытия");
         builder.setItems(fileNames, new DialogInterface.OnClickListener() {
@@ -169,12 +174,13 @@ public class TextEditorFragment extends Fragment {
     // Метод для загрузки текста из выбранного файла
     private void loadTextFromFile() {
         if (openedfile.exists()) {
-            StringBuilder text = new StringBuilder();
+            StringBuilder text = new StringBuilder(); // Переменная для хранекния текста
 
             try {
-                BufferedReader br = new BufferedReader(new FileReader(openedfile));
+                BufferedReader br = new BufferedReader(new FileReader(openedfile));// Открытие фАЙЛА
                 String line;
 
+                // Чтение построчно
                 while ((line = br.readLine()) != null) {
                     text.append(line).append('\n');
                 }
@@ -184,7 +190,7 @@ public class TextEditorFragment extends Fragment {
                 Toast.makeText(getContext(), "Ошибка при загрузке текста", Toast.LENGTH_SHORT).show();
             }
 
-            editText.setText(text.toString());
+            editText.setText(text.toString()); // Установка текста в тектовое поле
         }
     }
 }
